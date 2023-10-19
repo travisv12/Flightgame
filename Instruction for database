@@ -51,3 +51,6 @@ delete a1 from airport a1 join (select name, min(id) as min_id from airport grou
 DELETE FROM country
 WHERE name IN ('Pitcairn', 'Tokelau');
 
+- delete airport that has character "'":
+DELETE FROM airport
+WHERE name LIKE '%''%';

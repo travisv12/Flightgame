@@ -46,3 +46,8 @@ WHERE name LIKE '%Unknown%';
 
 - delete airports with same name but keep 1 left:
 delete a1 from airport a1 join (select name, min(id) as min_id from airport group by name having count(*) > 1) a2 on a1.name = a2.name where a1.id <> a2.min_id;
+
+- delete 2 countries with no airports:
+DELETE FROM country
+WHERE name IN ('Pitcairn', 'Tokelau');
+

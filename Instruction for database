@@ -8,7 +8,7 @@ drop table goal_reached cascade;
 drop table goal;
 drop table game;
 
-- create table game and add example user:
+- create table game and add example user(users can use this existing player credentials or create new during game):
 CREATE TABLE game (
     id INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(40),
@@ -24,7 +24,7 @@ CREATE TABLE game (
 );
 
 INSERT INTO game (username, password, money, fuel, people_saved, municipality_visited, fuel_efficiency, location)
-VALUES ('mahnoor', 'mahnoor', 3000, 5000, 0, 0, 0.8, "EFHK");
+VALUES ('username', 'password', 3000, 5000, 0, 0, 0.8, "EFHK");
 
 - add to table airport(people int random 10-50, fuel_price int random 8-12, probability int random 1-20)
 ALTER TABLE airport

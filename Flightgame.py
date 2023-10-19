@@ -99,17 +99,6 @@ def login_existing_user(connection,username,password):
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
 
-def select_three_random_countries(connection):
-    try:
-        cursor = connection.cursor()
-        cursor.execute("SELECT name FROM country ORDER BY RAND() LIMIT 3")
-        countries = [row[0] for row in cursor.fetchall()]
-        cursor.close()
-        return countries
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
-
 def select_five_random_airports(connection, country_name):
     try:
         cursor = connection.cursor()
@@ -213,13 +202,23 @@ def travel(connection, airport_name, username):
         print("Error: {}".format(err))
     get_status(connection,username)
 
-def user_choose_country(countries, chosen_countries):
+def select_three_random_countries(connection):
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT name FROM country ORDER BY RAND() LIMIT 3")
+        countries = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        return countries
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+def user_choose_country(chosen_countries):
     while True:
+        countries = select_three_random_countries(connection)
         available_countries = [country for country in countries if country not in chosen_countries]
 
-        if not available_countries:
-            print("You have chosen all the available countries.")
-            return None
+        if len(available_countries) < 3:
+            continue
         print("Choose one of the following countries:")
         for i, country in enumerate(available_countries, start=1):
             print(f"{i}. {country}")
@@ -411,12 +410,12 @@ def main():
             print("Invalid choice. Please enter 'n', 'e', or 'q'.")
     get_status(connection,username)
 
+    chosen_countries = []
     while True:
         status_list = get_status_without_printing(connection, username)
         current_people = status_list[2]
         current_visit = status_list[3]
         fuel = status_list[1]
-        chosen_countries = []
 
         if fuel < 0 or current_people > 150:
             time.sleep(1)
@@ -431,8 +430,8 @@ def main():
         else:
             buy_fuel(connection, username)
             time.sleep(1)
-            countries = select_three_random_countries(connection)
-            chosen_country = user_choose_country(countries, chosen_countries)
+            chosen_country = user_choose_country(chosen_countries)
+            chosen_countries.append(chosen_country)
             airports = select_five_random_airports(connection, chosen_country)
             chosen_airport = user_choose_airport(airports, chosen_country, username)
             time.sleep(1)

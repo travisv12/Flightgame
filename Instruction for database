@@ -24,7 +24,7 @@ CREATE TABLE game (
 );
 
 INSERT INTO game (username, password, money, fuel, people_saved, municipality_visited, fuel_efficiency, location)
-VALUES ('username', 'password', 3000, 5000, 0, 0, 0.8, "EFHK");
+VALUES ('username', 'password', 3000, 5000, 0, 0, 0.8, 'EFHK');
 
 - add to table airport(people int random 10-50, fuel_price int random 8-12, probability int random 1-20)
 ALTER TABLE airport

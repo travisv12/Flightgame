@@ -18,7 +18,7 @@ CREATE TABLE game (
     people_saved INT,
     municipality_visited INT,
     fuel_efficiency FLOAT,
-    location INT,
+    location varchar(40),
     PRIMARY KEY (id),
     FOREIGN KEY (location) REFERENCES airport (ident)
 );

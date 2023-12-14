@@ -1,5 +1,6 @@
 import time
 import mysql.connector
+from geopy.distance import geodesic
 
 connection = mysql.connector.connect(
     host='127.0.0.1',
@@ -9,8 +10,6 @@ connection = mysql.connector.connect(
     password='database123',
     autocommit=True
 )
-
-from geopy.distance import geodesic
 
 def story():
     while True:
@@ -48,7 +47,6 @@ def story():
 def distance(a,b):
     dist=geodesic(a,b).kilometers
     return dist
-
 def get_coordinate_by_name(name):
     sql = "select longitude_deg, latitude_deg from airport"
     sql += " where airport.name = '" + name + "'"
@@ -98,7 +96,16 @@ def login_existing_user(connection,username,password):
         cursor.close()
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
-
+def select_three_random_countries(connection):
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT name FROM country ORDER BY RAND() LIMIT 3")
+        countries = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        return countries
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
 def select_five_random_airports(connection, country_name):
     try:
         cursor = connection.cursor()
@@ -182,7 +189,6 @@ def buy_fuel(connection,username):
             break
         else:
             print("Invalid input, please enter integer.")
-
 def travel(connection, airport_name, username):
     destination=get_coordinate_by_name(airport_name)
     departure=get_coordinate_by_ident(username)
@@ -201,17 +207,6 @@ def travel(connection, airport_name, username):
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
     get_status(connection,username)
-
-def select_three_random_countries(connection):
-    try:
-        cursor = connection.cursor()
-        cursor.execute("SELECT name FROM country ORDER BY RAND() LIMIT 3")
-        countries = [row[0] for row in cursor.fetchall()]
-        cursor.close()
-        return countries
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
 def user_choose_country(chosen_countries):
     while True:
         countries = select_three_random_countries(connection)
@@ -237,7 +232,6 @@ def user_choose_country(chosen_countries):
                 print("Invalid choice. Please enter 1, 2, 3, or 0.")
         except ValueError:
             print("Invalid input. Please enter a number (1, 2, 3, or 0).")
-
 def user_choose_airport(airports, country_name, username):
     while True:
         print("Choose one of the following airports:")
@@ -269,7 +263,6 @@ def user_choose_airport(airports, country_name, username):
                 print("Invalid choice. Please enter the number according to airport name.")
         except ValueError:
             print("Invalid input. Please enter an integer number.")
-
 def rob(connection, airport_name, username):
     airport_status = get_airport_status_without_printing(connection, airport_name)
     probability = airport_status[3]
@@ -380,8 +373,6 @@ def reward(connection, airport_name, username):
 
             else:
                 print("Invalid choice. Please enter 1 or 2.")
-
-
 def main():
     story()
     time.sleep(1)
@@ -441,6 +432,6 @@ def main():
             reward(connection,chosen_airport,username)
 
     connection.close()
-
 if __name__ == "__main__":
     main()
+
